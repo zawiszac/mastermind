@@ -19,7 +19,7 @@ class Board
   attr_accessor :holes, :mini_holes, :number_of_rows
 
   def hole_at(row, col)
-    board_arr[row][col]
+    holes[row][col]
   end
 
   def print_column_line
