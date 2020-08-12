@@ -7,7 +7,16 @@ require_relative 'ai.rb'
 require_relative 'peg.rb'
 
 class Game
-  COLORS = %w[red orange yellow green blue purple blank].freeze
+  # COLORS = %w[red orange yellow green blue purple blank].freeze
+  COLORS = {
+    'R' => 'Red',
+    'O' => 'Orange',
+    'Y' => 'Yellow',
+    'G' => 'Green',
+    'B' => 'Blue',
+    'P' => 'Purple',
+    'X' => 'Blank'
+  }.freeze
 
   def initialize(number_of_guesses)
     self.gameboard = Board.new(number_of_guesses)
@@ -31,30 +40,13 @@ class Game
 
   def build_guess_pegs(guess)
     guess_pegs = []
-    guess.each_with_index do |color, index|
-      case color
-      when 'R'
-        guess_pegs[index] = Peg.new('Red')
-      when 'O'
-        guess_pegs[index] = Peg.new('Orange')
-      when 'Y'
-        guess_pegs[index] = Peg.new('Yellow')
-      when 'G'
-        guess_pegs[index] = Peg.new('Green')
-      when 'B'
-        guess_pegs[index] = Peg.new('Blue')
-      when 'P'
-        guess_pegs[index] = Peg.new('Purple')
-      when 'X'
-        guess_pegs[index] = Peg.new('')
-      end
-    end
+    guess.each { |color| guess_pegs << Peg.new(COLORS[color]) }
     guess_pegs
   end
 
   def add_guess(guess)
-    new_holes = guess.map { |peg| Hole.new(peg)}
-    gameboard.holes[round_number] = new_holes 
+    new_holes = guess.map { |peg| Hole.new(peg) }
+    gameboard.holes[round_number] = new_holes
   end
 
   def add_clue(clue)
