@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'pry'
+
 require_relative 'hole.rb'
 require_relative 'mini_hole.rb'
 
@@ -11,19 +13,13 @@ class Board
   def initialize(number_of_rows)
     self.number_of_rows = number_of_rows
     self.holes = Array.new(number_of_rows) { Array.new(4, Hole.new) }
-    self.mini_holes = Array.new(number_of_rows, MiniHole.new)
+    self.mini_holes = Array.new(number_of_rows){MiniHole.new}
   end
-
-  private
 
   attr_accessor :holes, :mini_holes, :number_of_rows
 
-  def hole_at(row, col)
-    holes[row][col]
-  end
-
   def print_column_line
-    print '  |   '
+    print '  |  '
   end
 
   def print_row_line
@@ -34,16 +30,19 @@ class Board
 
   def print_hole_cell(hole)
     print_column_line
-    print hole.peg
+    print hole.peg.to_s
   end
 
   def print_mini_holes(index)
     print_column_line
     print '   '
-    puts mini_holes[index].pegs.join
+    mini_holes[index].pegs.each { |peg| print peg.to_s}
+    puts "\n"
   end
 
-  public
+  def hole_at(row, col)
+    holes[row][col]
+  end
 
   def display
     puts "\n\n\n"
