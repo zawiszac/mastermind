@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class MiniHole
-  def initialize
-    self.pegs = [nil, nil, nil, nil]
+  def initialize(arr = [nil, nil, nil])
+    self.pegs = arr
   end
 
   attr_accessor :pegs
