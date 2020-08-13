@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MiniHole
+class ClueHole
   def initialize(arr = [Peg.new(' '), Peg.new(' '), Peg.new(' '), Peg.new(' ')])
     self.pegs = arr
   end

@@ -3,11 +3,12 @@
 require 'pry'
 
 class Ai
-  def initialize(_colors)
-    self.secret_code = [Peg.new(_colors.values.sample), Peg.new(_colors.values.sample), Peg.new(_colors.values.sample), Peg.new(_colors.values.sample)]
-    # self.secret_code = [Peg.new("Red"), Peg.new("Orange"), Peg.new("Red"), Peg.new("Green")]
+  def initialize(colors)
+    self.secret_code = [Peg.new(colors.values.sample),
+                        Peg.new(colors.values.sample),
+                        Peg.new(colors.values.sample),
+                        Peg.new(colors.values.sample)]
     self.color_frequency = build_color_frequency(secret_code)
-
   end
 
   attr_accessor :secret_code, :color_frequency
@@ -24,7 +25,8 @@ class Ai
   def add_white_pegs(guess_pegs, clue_pegs)
     guess_pegs.each_with_index do |peg, index|
       next if clue_pegs[index].color == 'Black'
-      if secret_code.any? { |secret_peg| secret_peg.color == peg.color } && color_frequency[peg.color].positive?
+
+      if secret_code.any? { |secret_peg| secret_peg.color == peg.color } && color_frequency[peg.color] > 0
         clue_pegs[index] = Peg.new('White')
         color_frequency[peg.color] -= 1
       end

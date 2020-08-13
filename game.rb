@@ -28,12 +28,12 @@ class Game
 
   attr_accessor :gameboard, :opponent, :current_row, :number_of_guesses
 
-  def prompt(guess_arr = Array.new)
+  def prompt(guess_arr = [])
     until guess_arr.length == 4
       puts 'R: red, O: orange, Y: yellow, G: green, B: blue, P: purple'
       print 'Enter 4 of the above letters (no spaces) to guess the code: '
       guess_arr = gets.chomp.upcase.split(//)
-      puts "Error: must enter exactly 4 colors" if guess_arr.length != 4
+      puts 'Error: must enter exactly 4 colors' if guess_arr.length != 4
     end
     guess_arr
   end
@@ -46,8 +46,8 @@ class Game
 
   def place_pegs(pegs, clue_pegs = false)
     if clue_pegs
-      mini_hole_to_fill = gameboard.mini_holes[current_row]
-      mini_hole_to_fill.pegs = pegs
+      clue_hole_to_fill = gameboard.clue_holes[current_row]
+      clue_hole_to_fill.pegs = pegs
     else
       holes_to_fill_arr = gameboard.holes[current_row]
       holes_to_fill_arr.each_with_index do |hole, index|
