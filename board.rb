@@ -33,10 +33,12 @@ class Board
     print hole.peg.to_s
   end
 
-  def print_mini_holes(index)
+  def print_mini_hole(index)
     print_column_line
     print '   '
+    print "{"
     mini_holes[index].pegs.each { |peg| print peg.to_s }
+    print "}"
     puts "\n"
   end
 
@@ -49,7 +51,7 @@ class Board
     print_row_line
     holes.each_with_index do |row, index|
       row.each { |hole| print_hole_cell(hole) }
-      print_mini_holes(index)
+      print_mini_hole(index)
       print_row_line
     end
     puts "\n\n\n"
