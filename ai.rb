@@ -3,45 +3,44 @@
 require 'pry'
 
 class Ai
-  def initialize(colors)
-    # self.code = colors.sample(4)
-    self.code = ["Red", "Orange", "Yellow", "Green"]
+  def initialize(_colors)
+    # self.secret_code = colors.sample(4)
+    self.secret_code = %w[Red Orange Yellow Green]
   end
 
-  attr_accessor :code
+  attr_accessor :secret_code
 
-  def add_black_pegs(guess, guess_hash, clue)
-    guess.each_with_index do |peg, index|
-      clue[index] = Peg.new('Black') if peg.color == code[index]
-      guess_hash[peg.color] -= 1
-    end
-  end
-
-  def add_white_pegs(guess, guess_hash, clue)
-    guess.each_with_index do |peg, index|
-      next if clue[index].color == "Black"
-      clue[index] = Peg.new('White') if code.include?(peg.color) && guess_hash.key?(peg.color)
-    end
-  end
-
-  def build_guess_hash(guess)
-    guess_hash= {}
-    guess.each do |peg|
-      if guess_hash.key?(peg.color)
-        guess_hash[peg.color] += 1
-      else
-        guess_hash[peg.color] = 1
+  def add_black_pegs(guess_pegs, color_frequency, clue_pegs)
+    guess_pegs.each_with_index do |peg, index|
+      if peg.color == secret_code[index]
+        clue_pegs[index] = Peg.new('Black')
+        color_frequency[peg.color] -= 1
       end
     end
-    guess_hash
   end
 
-  def give_clue(guess)
-    clue = [nil, nil, nil, nil]
-    guess_hash = build_guess_hash(guess)
-    add_black_pegs(guess, guess_hash, clue)
-    add_white_pegs(guess, guess_hash, clue)
-    new_mini_hole = MiniHole.new(clue)
-    new_mini_hole
+  def add_white_pegs(guess_pegs, color_frequency, clue_pegs)
+    guess_pegs.each_with_index do |peg, index|
+      next if clue_pegs[index].color == 'Black'
+
+      if secret_code.include?(peg.color) && color_frequency[peg.color].positive?
+        clue_pegs[index] = Peg.new('White')
+        color_frequency[peg.color] -= 1
+      end
+    end
+  end
+
+  def build_color_frequency(guess_pegs)
+    color_frequency = Hash.new(0)
+    guess_pegs.each { |peg| color_frequency[peg.color] += 1 }
+    color_frequency
+  end
+
+  def give_clue(guess_pegs)
+    clue_pegs = Array.new(4) { Peg.new(' ') }
+    color_frequency = build_color_frequency(guess_pegs)
+    add_black_pegs(guess_pegs, color_frequency, clue_pegs)
+    add_white_pegs(guess_pegs, color_frequency, clue_pegs)
+    clue_pegs
   end
 end

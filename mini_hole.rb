@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class MiniHole
-  def initialize(arr = [nil, nil, nil])
+  def initialize(arr = [Peg.new(' '), Peg.new(' '), Peg.new(' '), Peg.new(' ')])
     self.pegs = arr
   end
 

@@ -12,8 +12,8 @@ class Board
 
   def initialize(number_of_rows)
     self.number_of_rows = number_of_rows
-    self.holes = Array.new(number_of_rows) { Array.new(4, Hole.new) }
-    self.mini_holes = Array.new(number_of_rows){MiniHole.new}
+    self.holes = Array.new(number_of_rows) { Array.new(4) { Hole.new } }
+    self.mini_holes = Array.new(number_of_rows) { MiniHole.new }
   end
 
   attr_accessor :holes, :mini_holes, :number_of_rows
@@ -36,7 +36,7 @@ class Board
   def print_mini_holes(index)
     print_column_line
     print '   '
-    mini_holes[index].pegs.each { |peg| print peg.to_s}
+    mini_holes[index].pegs.each { |peg| print peg.to_s }
     puts "\n"
   end
 

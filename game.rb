@@ -14,55 +14,68 @@ class Game
     'Y' => 'Yellow',
     'G' => 'Green',
     'B' => 'Blue',
-    'P' => 'Purple',
-    'X' => 'Blank'
+    'P' => 'Purple'
   }.freeze
 
   def initialize(number_of_guesses)
+    self.number_of_guesses = number_of_guesses
     self.gameboard = Board.new(number_of_guesses)
     self.opponent = Ai.new(COLORS)
-    self.round_number = 0
+    self.current_row = 0
   end
 
   private
 
-  attr_accessor :gameboard, :opponent, :round_number
+  attr_accessor :gameboard, :opponent, :current_row, :number_of_guesses
 
   def prompt
-    puts 'R: red, O: orange, Y: yellow, G: green, B: blue, P: purple, X: blank'
+    puts 'R: red, O: orange, Y: yellow, G: green, B: blue, P: purple'
     print 'Enter 4 of the above letters (no spaces) to guess the code: '
+    guess_arr = gets.chomp.upcase.split(//)
+    if guess_arr.length != 4
+      puts 'Error: must enter 4 colors.'
+      prompt
+    end
+    guess_arr
   end
 
-  def place_peg(new_peg, row, col)
-    hole = gameboard.hole_at(row, col)
-    hole.peg = new_peg
-  end
-
-  def build_guess_pegs(guess)
+  def build_guess_pegs(guess_arr)
     guess_pegs = []
-    guess.each { |color| guess_pegs << Peg.new(COLORS[color]) }
+    guess_arr.each { |color| guess_pegs << Peg.new(COLORS[color]) }
     guess_pegs
   end
 
-  def add_guess(guess)
-    new_holes = guess.map { |peg| Hole.new(peg) }
-    gameboard.holes[round_number] = new_holes
+  def place_pegs(pegs, clue_pegs = false)
+    if clue_pegs
+      mini_hole_to_fill = gameboard.mini_holes[current_row]
+      mini_hole_to_fill.pegs = pegs
+    else
+      holes_to_fill_arr = gameboard.holes[current_row]
+      holes_to_fill_arr.each_with_index do |hole, index|
+        hole.peg = pegs[index]
+      end
+    end
   end
 
-  def add_clue(clue)
-    gameboard.mini_holes[round_number] = clue
+  def game_over?(clue_pegs)
+    if clue_pegs.all? { |peg| peg.color == 'Black' }
+      [true, 'win!']
+    elsif current_row == number_of_guesses
+      [true, 'lose!']
+    else
+      [false, '']
+    end
   end
 
   public
 
   def play_round
-    prompt
-    guess = gets.chomp.upcase.split(//)
-    guess_pegs = build_guess_pegs(guess)
-    add_guess(guess_pegs)
-    clue = opponent.give_clue(guess_pegs)
-    add_clue(clue)
-    self.round_number += 1
+    guess_pegs = build_guess_pegs(prompt)
+    place_pegs(guess_pegs)
+    clue_pegs = opponent.give_clue(guess_pegs)
+    place_pegs(clue_pegs, true)
+    self.current_row += 1
     gameboard.display
+    game_over?(clue_pegs)
   end
 end
