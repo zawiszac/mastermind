@@ -2,7 +2,7 @@
 
 require_relative 'game.rb'
 
-print 'How many rounds do you want to play?: '
+print 'How many guesses? '
 rounds = gets.chomp.to_i
 print 'Will you be the codemaker y/n?: '
 choice = gets.chomp.downcase
@@ -17,3 +17,5 @@ until game_is_over
     game_is_over = true
   end
 end
+
+

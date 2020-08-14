@@ -88,7 +88,7 @@ class Game
   end
 
   def last_guess
-    gameboard.holes[current_row - 1].map { |hole| hole.peg } if current_row > 0
+    gameboard.holes[current_row - 1].map(&:peg) if current_row > 0
   end
 
   def set_code
@@ -106,9 +106,10 @@ class Game
       place_pegs(guess_pegs)
       clue_pegs = opponent.give_clue(guess_pegs, opponent.color_frequency)
     else
-      guess_pegs = opponent.guess(last_clue, last_guess)
+      guess_pegs = opponent.guess_strategy1(last_clue, last_guess)
       place_pegs(guess_pegs)
       clue_pegs = user.give_clue(guess_pegs, user.color_frequency)
+      puts "Thinking..."
       sleep(3)
     end
     place_pegs(clue_pegs, true)

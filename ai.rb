@@ -25,7 +25,35 @@ class Ai
     color_frequency
   end
 
-  def guess(clue_hole, last_guess_pegs)
+  def repeat_correct_pegs(clue_hole, new_guess_pegs, last_guess_pegs, incorrectly_positioned_colors)
+    clue_hole.pegs.each_with_index do |clue_peg, i|
+      new_guess_pegs[i].color = last_guess_pegs[i].color if clue_peg.color == 'Black'
+      incorrectly_positioned_colors[i] = [last_guess_pegs[i].color, false] if clue_peg.color == 'White'
+    end
+  end
+
+  def reposition_incorrect_pegs(new_guess_pegs, incorrectly_positioned_colors)
+    new_guess_pegs.each_with_index do |peg, i|
+      incorrectly_positioned_colors.each do |previous_position, color_and_reposition_status|
+        if peg.color == ' ' && previous_position != i && !color_and_reposition_status[1]
+          new_guess_pegs[i].color = color_and_reposition_status[0]
+          color_and_reposition_status[1] = true
+        end
+      end
+    end
+  end
+
+  def guess_strategy1(clue_hole, last_guess_pegs)
+    new_guess_pegs = Array.new(4) { Peg.new(' ') }
+    incorrectly_positioned_colors = {}
+    return Array.new(4) { Peg.new(guess_colors.values.sample) } unless clue_hole
+
+    repeat_correct_pegs(clue_hole, new_guess_pegs, last_guess_pegs, incorrectly_positioned_colors)
+    reposition_incorrect_pegs(new_guess_pegs, incorrectly_positioned_colors)
+    new_guess_pegs.each { |peg| peg.color = guess_colors.values.sample if peg.color == ' ' }
+  end
+
+  def guess_strategy2(clue_hole, last_guess_pegs)
     new_guess_pegs = []
     
     unless clue_hole
