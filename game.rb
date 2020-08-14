@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'pry'
-
 require_relative 'board.rb'
 require_relative 'ai.rb'
 require_relative 'peg.rb'
 require_relative 'player.rb'
+
+require 'pry'
 
 class Game
   # COLORS = %w[red orange yellow green blue purple blank].freeze
@@ -23,7 +23,7 @@ class Game
     self.gameboard = Board.new(number_of_guesses)
     self.opponent = Ai.new(COLORS)
     self.user = Player.new
-    self.codemaker = (user_choice == 'y') ? user : opponent
+    self.codemaker = user_choice == 'y' ? user : opponent
     self.current_row = 0
     self.code_exists = false
   end
@@ -36,11 +36,11 @@ class Game
     secret_code = []
     until secret_code.length == 4
       puts 'R: red, O: orange, Y: yellow, G: green, B: blue, P: purple'
-      print "Enter 4 of the above letters to create your secret code (no spaces): "
+      print 'Enter 4 of the above letters to create your secret code (no spaces): '
       secret_code = gets.chomp.upcase.split(//)
       puts 'Error: must enter exactly 4 colors' if secret_code.length != 4
     end
-    code_exists = true
+    self.code_exists = true
     secret_code
   end
 
@@ -92,7 +92,7 @@ class Game
   end
 
   def set_code
-    user.set_secret_code(prompt_codemaker.map { |color| Peg.new(COLORS[color])})
+    user.set_secret_code(prompt_codemaker.map { |color| Peg.new(COLORS[color]) })
     self.code_exists = true
   end
 

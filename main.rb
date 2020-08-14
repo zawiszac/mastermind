@@ -2,17 +2,13 @@
 
 require_relative 'game.rb'
 
-codemaker = ""
-codebreaker = ""
-
 print 'How many rounds do you want to play?: '
 rounds = gets.chomp.to_i
-print "Will you be the codemaker y/n?: "
+print 'Will you be the codemaker y/n?: '
 choice = gets.chomp.downcase
 
 game = Game.new(rounds, choice)
 game_is_over = false
-
 
 until game_is_over
   round_result = game.play_round

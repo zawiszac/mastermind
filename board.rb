@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'pry'
-
 require_relative 'hole.rb'
 require_relative 'clue_hole.rb'
 
